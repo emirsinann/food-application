@@ -1,3 +1,5 @@
+
+
 .App {
   text-align: center;
 }
@@ -36,3 +38,56 @@
     transform: rotate(360deg);
   }
 }
+
+/* SLIDER SECTION */
+
+.slider{
+  width: 600px;
+  margin: 0 auto;
+  box-shadow: 5px 7px 15px 0 rgba(0, 0, 0, 0.445);
+}
+.carousel-img{
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .slider{
+    width: 100%;
+  }
+}
+/* SLIDER SECTION END*/
+
+
+/* PRODUCT LIST SECTION START*/
+.product-list{
+  align-items: center;
+  justify-content: center;
+}
+.divider-bar{
+  width: 90%;
+  height: 15px;
+  background-color: #C91B1B;
+  margin: 20px auto 0 auto;
+  border-radius: 5px;
+}
+
+.list-group{
+  width: 80%;
+  margin: 0 auto;
+}
+
+.list-item{
+  background-color: #FFF500;
+  border: none;
+  margin: 0 10px ;
+  border-radius: 0 0 5px 5px;
+  text-align: center;
+}
+.list-item:hover{
+  background-color: #d1920b;
+}
+.list-item:active{
+  background-color: #C91B1B;
+  color: #fff;
+}
+/* PRODUCT LIST SECTION END*/
