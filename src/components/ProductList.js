@@ -226,31 +226,33 @@ export default function ProductList() {
         });
         setData(result);
     }
-    /* useEffect(() => { //first page load data check
-        
-    }, [catItem]); */
+
+    useEffect(() => { //first page load data check
+        filterResult("Burgerler");
+    }, []);
+
     return (
         <div className='product-list'>
             <div className='divider-bar'></div>
             <div className="list">
-                <ListGroup key="sm" horizontal="sm" defaultActiveKey="#link1">
-                    <ListGroup.Item action href="#link1" onClick={() => filterResult("Burgerler")}>Burgerler</ListGroup.Item>
-                    <ListGroup.Item action href="#link2" onClick={() => filterResult("Aperatifler")}>Aperatifler</ListGroup.Item>
-                    <ListGroup.Item action href="#link3" onClick={() => filterResult("Tatlılar")}>Tatlılar</ListGroup.Item>
-                    <ListGroup.Item action href="#link4" onClick={() => filterResult("İçecekler")}>İçecekler</ListGroup.Item>
+                <ListGroup key="sm" horizontal="sm" defaultActiveKey="#burgerler">
+                    <ListGroup.Item action href="#burgerler" onClick={() => filterResult("Burgerler")}>Burgerler</ListGroup.Item>
+                    <ListGroup.Item action href="#aperatifler" onClick={() => filterResult("Aperatifler")}>Aperatifler</ListGroup.Item>
+                    <ListGroup.Item action href="#tatlilar" onClick={() => filterResult("Tatlılar")}>Tatlılar</ListGroup.Item>
+                    <ListGroup.Item action href="#icecekler" onClick={() => filterResult("İçecekler")}>İçecekler</ListGroup.Item>
                 </ListGroup>
             </div>
             <div className="products">
                 <Container fluid>
                     <Row >
                         {data.map((item) => (
-                            <Col xs={12} md={6} lg={3} xl={3} key={item.id}>
+                            <Col xs={12} sm={6} md={4} lg={3} xl={3} key={item.id}>
                                 <div className="product">
                                     <Image src={item.image} className='product-image' />
                                     <div className="product-divider"></div>
                                     <div className="bottom-section">
                                         <div className="product-name"><h5>{item.name}</h5></div>
-                                        <a href='#' className='add-cart'><Image src={addcart} /></a>
+                                        <a href='/' className='add-cart'><Image src={addcart} /></a>
                                     </div>
                                     <div className="product-price"><strong>{item.price}₺</strong></div>
                                 </div>
