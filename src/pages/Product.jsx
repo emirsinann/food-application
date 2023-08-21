@@ -3,14 +3,18 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Slider from '../components/Slider'
 import ProductList from '../components/ProductList'
+import Register from '../components/Register'
+import Login from '../components/Login'
 
 export default function Product() {
   return (
     <div>
         <Header/>
-        <Slider/>
+        <Login/>
+        <Register/>
+        {/* <Slider/>
         <ProductList/>
-        <Footer/>
+        <Footer/> */}
     </div>
   )
 }
