@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './css/custom.min.css'
+import './custom.css'
 import Product from './pages/Product';
 
 
