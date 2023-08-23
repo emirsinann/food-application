@@ -1,9 +1,13 @@
 import { useRef, useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from "../context/AuthProvider";
 import axios from '../api/axios';
+import Header from '../components/Header'
 const LOGIN_URL = '/auth';
 
 const Login = () => {
+    const navigate = useNavigate();
+
     const { setAuth } = useContext(AuthContext);
     const userRef = useRef();
     const errRef = useRef();
@@ -52,12 +56,14 @@ const Login = () => {
             }
             errRef.current.focus();
         }
+        navigate('/');
     }
 
     return (
         <>
+            <Header />
             {success ? (
-                <section>
+                <section className='logged-in'>
                     <h1>You are logged in!</h1>
                     <br />
                     <p>
@@ -65,11 +71,10 @@ const Login = () => {
                     </p>
                 </section>
             ) : (
-                <section>
+                <section className='loginpage'>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Sign In</h1>
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">Username:</label>
+                        <label htmlFor="username">Email:</label>
                         <input
                             type="text"
                             id="email"
@@ -80,7 +85,7 @@ const Login = () => {
                             required
                         />
 
-                        <label htmlFor="password">Password:</label>
+                        <label htmlFor="password">Şifre:</label>
                         <input
                             type="password"
                             id="password"
@@ -88,13 +93,12 @@ const Login = () => {
                             value={pwd}
                             required
                         />
-                        <button>Sign In</button>
+                        <button>Giriş Yap</button>
                     </form>
-                    <p>
-                        Need an Account?<br />
-                        <span className="line">
-                            {/*put router link here*/}
-                            <a href="#">Sign Up</a>
+                    <p className='link-section'>
+                        Hesabınız yok mu?<br />
+                        <span className="line" onClick={()=>navigate('/register')}>
+                            Kayıt Ol
                         </span>
                     </p>
                 </section>

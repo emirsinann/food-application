@@ -365,3 +365,38 @@ padding: 0.5rem;
   display: inline-block;
 }
 /* REGISTER SECTION END */
+
+/* LOGIN SECTION START */
+
+.logged-in{
+  margin: 250px auto;
+  background-color: var(--customred);
+}
+
+.logged-in label{
+  color: var(--customwhite);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.loginpage{
+  margin: 250px auto;
+  background-color: var(--customred);
+  border-radius: 10px;
+  box-shadow: 5px 7px 15px 0 rgba(0, 0, 0, 0.445);
+}
+
+.loginpage label{
+  color: var(--customwhite);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.link-section{
+  color: var(--customwhite);
+}
+
+.line{
+  color: var(--customyellow);
+  cursor: pointer;
+}
