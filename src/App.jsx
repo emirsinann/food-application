@@ -3,17 +3,29 @@ import "./custom.css";
 import Product from "./pages/Product";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
+import Missing from "./pages/Missing";
+import RequireAuth from "./components/RequireAuth";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <main>
-        <Routes>
-          <Route path="/" element={<Product />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-    </main>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Product />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+
+        <Route element={<RequireAuth />}>
+          <Route path="cart" element={<Cart />} />
+          <Route path="orders" element={<Orders />} />
+        </Route>
+
+        <Route path="*" element={<Missing />} />
+      </Route>
+    </Routes>
   );
 }
 

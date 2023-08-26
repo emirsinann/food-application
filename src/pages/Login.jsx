@@ -1,21 +1,23 @@
-import { useRef, useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from "../context/AuthProvider";
-import axios from '../api/axios';
+import { useRef, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 import Header from '../components/Header'
-const LOGIN_URL = '/auth';
+import axios from '../api/axios';
+import AuthService from '../services/auth-service';
 
 const Login = () => {
-    const navigate = useNavigate();
 
-    const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from.pathname || "/";
+
     const userRef = useRef();
     const errRef = useRef();
 
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
 
     useEffect(() => {
         userRef.current.focus();
@@ -29,21 +31,14 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(LOGIN_URL,
-                JSON.stringify({ email, pwd }),
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
-                }
-            );
-            console.log(JSON.stringify(response?.data));
-            //console.log(JSON.stringify(response));
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({ email, pwd, roles, accessToken });
+            const response = await AuthService.login(email, pwd);
+            console.log(response);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response?.access_token}`;
+            const accessToken = response?.access_token;
+            setAuth({ email, pwd, accessToken });
             setEmail('');
             setPwd('');
-            setSuccess(true);
+            navigate(from, { replace: true });
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -51,26 +46,20 @@ const Login = () => {
                 setErrMsg('Missing Username or Password');
             } else if (err.response?.status === 401) {
                 setErrMsg('Unauthorized');
-            } else {
+            }else if (err.response?.status === 404){
+                setErrMsg('User Not Found');
+            } 
+            else {
                 setErrMsg('Login Failed');
             }
             errRef.current.focus();
         }
-        navigate('/');
     }
 
     return (
         <>
             <Header />
-            {success ? (
-                <section className='logged-in'>
-                    <h1>You are logged in!</h1>
-                    <br />
-                    <p>
-                        <a href="#">Go to Home</a>
-                    </p>
-                </section>
-            ) : (
+            <div className='page-divider'></div>
                 <section className='loginpage'>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <form onSubmit={handleSubmit}>
@@ -102,7 +91,6 @@ const Login = () => {
                         </span>
                     </p>
                 </section>
-            )}
         </>
     )
 }

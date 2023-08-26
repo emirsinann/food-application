@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Image from 'react-bootstrap/Image'
+import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import burger from '../assets/burger1.jpg';
-import addcart from '../assets/add-to-cart.png'
-import drink from '../assets/drink.png'
-import desert from '../assets/desert.png'
-import chips from '../assets/chips.png'
+import addcart from '../assets/add-to-cart.png';
+import drink from '../assets/drink.png';
+import desert from '../assets/desert.png';
+import chips from '../assets/chips.png';
 
 const totalData = [
     {

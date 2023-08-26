@@ -1,7 +1,7 @@
 
 :root{
   --customred: #C91B1B;
-  --customyellow: #FFF500;
+  --customyellow: #ff8800;
   --customdarkyellow: #FFD700;
   --customwhite: #FFFFFF;
 }
@@ -29,44 +29,73 @@ $list-group-action-active-bg:       var(--customred);
 /* HEADER SECTION START */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #C91B1B;
-  padding: 5px;
-  height: 50px;
+  position: fixed;
+  width: 100%;
+  background-color: var(--customred);
   color: white;
+  z-index: 99;
 }
 
 .navbar-left {
-  flex: 1;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navbar-right {
+  margin: 0;
   display: flex;
   align-items: center;
-  padding-right: 25px;
+  justify-content: center;
+  padding-left: 0 ;
 }
 
 .navbar-text {
   padding: 0;
   font-weight: 700;
   font-size: 30px;
-  margin-right: 20px;
   cursor: pointer;
-  margin-left: 100px;
   color: white;
+}
+
+.navbar-logout{
+  cursor: pointer;
+  margin: 0 5px;
 }
 
 .navbar-icon {
   width: 24px;
   height: 24px;
-  margin-left: 10px;
+  margin: 0 10px;
   cursor: pointer;
+}
+@media only screen and (max-width: 768px){
+  .navbar-right{
+    width: auto;
+    padding-right: 10px;
+  }
+  .navbar-left{
+    width: auto;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .navbar-text {
+    padding-left: 10px;
+    font-size: 20px;
+  }
+  .navbar-icon {
+    width: 20px;
+    height: 20px;
+  }
 }
 /* HEADER SECTION END */
 
 /* SLIDER SECTION */
 .slider{
+  padding-top: 61px;
   background-color: #0000000e;
   padding-bottom: 10px;
 }
@@ -82,6 +111,12 @@ $list-group-action-active-bg:       var(--customred);
 @media only screen and (max-width: 600px) {
   .carousel{
     width: 100%;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .slider{
+    padding-top: 46px;
+    padding-bottom: 10px;
   }
 }
 /* SLIDER SECTION END*/
@@ -228,7 +263,7 @@ $list-group-action-active-bg:       var(--customred);
   align-items: center;
   margin-top: 50px;
   .social-wrapper>h2{
-    color: var(--customyellow);
+    color: var(--customdarkyellow);
   }
 }
 .right-col{
@@ -278,16 +313,6 @@ $list-group-action-active-bg:       var(--customred);
 /* FOOTER SECTION END */
 
 /* REGISTER SECTION START */
-section {
-  width: 100%;
-  max-width: 420px;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 1rem;
-  background-color: rgba(0,0,0,0.4);
-}
 
 form {
   display: flex;
@@ -367,9 +392,15 @@ padding: 0.5rem;
 /* REGISTER SECTION END */
 
 /* LOGIN SECTION START */
-
+.page-divider{
+  color: var(--customred);
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0 auto;
+  padding-top: 300px;
+}
 .logged-in{
-  margin: 250px auto;
+  padding: 250px auto 0 auto;
   background-color: var(--customred);
 }
 
@@ -380,10 +411,16 @@ padding: 0.5rem;
 }
 
 .loginpage{
-  margin: 250px auto;
+  padding: 1rem;
   background-color: var(--customred);
   border-radius: 10px;
   box-shadow: 5px 7px 15px 0 rgba(0, 0, 0, 0.445);
+  width: 100%;
+  max-width: 420px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
 }
 
 .loginpage label{
@@ -397,6 +434,19 @@ padding: 0.5rem;
 }
 
 .line{
-  color: var(--customyellow);
+  color: var(--customdarkyellow);
   cursor: pointer;
+  font-weight: 600;
 }
+
+/* CART SECTION START */
+.cart{
+  padding-top: 61px;
+}
+/* CART SECTION END */
+
+/* ORDER SECTION START */
+.orders{
+  padding-top: 61px;
+}
+/* ORDER SECTION END */

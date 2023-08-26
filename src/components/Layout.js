@@ -1,9 +1,10 @@
-import { faMapPin } from '@fortawesome/free-solid-svg-icons'
-import React from 'react'
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
-    
+    <main className='App'>
+      <Outlet/>
+    </main>
   )
 }
 
