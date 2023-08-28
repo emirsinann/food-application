@@ -12173,6 +12173,7 @@ textarea.form-control-lg {
   display: flex;
   justify-content: flex-end;
   margin: 10px 10px 0 0;
+  cursor: pointer;
 }
 
 .add-cart img {

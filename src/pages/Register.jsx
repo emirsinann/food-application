@@ -101,6 +101,7 @@ const Register = () => {
       }
       errRef.current.focus();
     }
+    navigate("/login");
   };
 
   return (
