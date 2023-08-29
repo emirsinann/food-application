@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header'
-import axios from '../api/axios';
 import AuthService from '../services/auth-service';
 
 const Login = () => {
@@ -33,8 +32,7 @@ const Login = () => {
         try {
             const response = await AuthService.login(email, pwd);
             console.log(response);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response?.access_token}`;
-            const accessToken = response?.access_token;
+            const accessToken = response?.acces_token;
             setAuth({ email, pwd, accessToken });
             setEmail('');
             setPwd('');

@@ -39,6 +39,7 @@ function Header() {
               alt="Cart"
               onClick={() => navigate("/cart")}
               />
+            {/* {auth.auth.email && <strong className="navbar-logout" onClick={()=>navigate("/cart")}>Sepet</strong>} */}
             {auth.auth.email && <strong className="navbar-logout" onClick={signOut}>Çıkış Yap</strong>}
           </Col>
         </Row>
