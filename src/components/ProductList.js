@@ -18,9 +18,15 @@ export default function ProductList() {
 
   useEffect(() => {
     dispatch(fetchProducts());
+
   }, [dispatch]);
 
-  const [data, setData] = useState(products);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData(products);
+  }, [products]);
+
   const filterResult = (catItem) => {
     const result = products.filter((item) => {
       return item.categoryCategoryID === catItem;
@@ -28,22 +34,16 @@ export default function ProductList() {
     setData(result);
   };
 
-
-  useEffect(() => {
-    //first page load data check CALISMIYOR BAKILACAK.
-    filterResult(1);
-  }, []);
-
   useEffect(() => {
     //cart item check
     console.log(cartItems);
-  });
+  }, [cartItems] );
 
   return (
     <div className="product-list">
       <div className="divider-bar"></div>
       <div className="list">
-        <ListGroup key="sm" horizontal="sm" defaultActiveKey="#burgerler">
+        <ListGroup key="sm" horizontal="sm" >
           <ListGroup.Item
             action
             href="#burgerler"
@@ -54,7 +54,7 @@ export default function ProductList() {
           <ListGroup.Item
             action
             href="#aperatifler"
-            onClick={() => filterResult(4)}
+            onClick={() => filterResult(2)}
           >
             Aperatifler
           </ListGroup.Item>
@@ -68,7 +68,7 @@ export default function ProductList() {
           <ListGroup.Item
             action
             href="#icecekler"
-            onClick={() => filterResult(2)}
+            onClick={() => filterResult(4)}
           >
             İçecekler
           </ListGroup.Item>

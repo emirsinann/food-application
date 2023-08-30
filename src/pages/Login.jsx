@@ -2,11 +2,12 @@ import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header'
-import AuthService from '../services/auth-service';
+
 
 const Login = () => {
 
-    const { setAuth } = useAuth();
+    const { login } = useAuth();
+    
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from.pathname || "/";
@@ -30,10 +31,10 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await AuthService.login(email, pwd);
-            console.log(response);
+            const response = await login(email, pwd);
             const accessToken = response?.acces_token;
-            setAuth({ email, pwd, accessToken });
+            localStorage.setItem('accessToken', accessToken);
+            console.log(accessToken);
             setEmail('');
             setPwd('');
             navigate(from, { replace: true });

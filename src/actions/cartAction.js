@@ -2,7 +2,8 @@ import {
   ADD_TO_CART,
   DELETE_FROM_CART,
   UPDATE_CART_ITEM_QUANTITY,
-  DECREMENT_CART_ITEM_QUANTITY, // Add this import
+  DECREMENT_CART_ITEM_QUANTITY,
+  CLEAR_CART, // Add this import
 } from './cartActionTypes';
 
 export const addToCart = (item) => ({
@@ -23,4 +24,8 @@ export const updateCartItemQuantity = (itemId, quantity) => ({
 export const decrementCartItemQuantity = (item) => ({
   type: DECREMENT_CART_ITEM_QUANTITY,
   payload: item,
+});
+
+export const clearCart = () => ({
+  type: CLEAR_CART,
 });
