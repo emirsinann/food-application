@@ -12077,6 +12077,7 @@ textarea.form-control-lg {
 .product-list {
   align-items: center;
   justify-content: center;
+  min-height: 800px;
 }
 
 .divider-bar {

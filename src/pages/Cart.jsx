@@ -15,17 +15,31 @@ import { fetchUserAddress } from "../actions/userActions";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const userAddress = useSelector((state) => state.userReducer.address);
+  const storedUserJSON = localStorage.getItem("user"); //localstorage dan user bilgileri çekildi
+  const userAddress = useSelector((state) => state.userReducer.address); //userAdress reduxtan çekildi
+  const cartItems = useSelector((state) => state.cartReducer.cartItems);
+  const [sending, setSending] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("creditCard");
+  const [selectedAddressId, setSelectedAddressId] = useState(null); // seçilen adresin idsi
+  const [addressData, setAddressData] = useState({
+    name: "",
+    description: "",
+    city: "",
+    district: "",
+  });
 
-  useEffect(() => {
-    dispatch(fetchUserAddress(getUserId));
+  useEffect(() => { // adresleri çekme fonksiyonu
+    dispatch(fetchUserAddress(getUserId)); 
   }, []);
 
-  console.log("User Address:", userAddress);
-  // Retrieve stored user data from localStorage
-  const storedUserJSON = localStorage.getItem("user");
 
-  const getUserId = () => {
+  const handleAddressChange = (event) => {
+    setSelectedAddressId(event.target.value); // seçilen adresin idsi set edildi radio butonlarından alındı
+  };
+
+  // Retrieve stored user data from localStorage
+
+  const getUserId = () => { //user idsi çekildi
     if (storedUserJSON) {
       // Parse the stored user data
       const storedUser = JSON.parse(storedUserJSON);
@@ -38,26 +52,29 @@ const Cart = () => {
     }
   };
 
-  const [sending, setSending] = useState(false);
-  const cartItems = useSelector((state) => state.cartReducer.cartItems);
 
-  const handleDelete = (itemId) => {
+  const handleDelete = (itemId) => {  //sepetten ürün silme fonksiyonu
     dispatch(removeFromCart(itemId));
   };
 
-  const handleIncrement = (item) => {
+  const handleIncrement = (item) => { // sepetteki ürüne +1 ekleme fonksiyonu
     dispatch(addToCart(item));
   };
 
-  const handleDecrement = (item) => {
+  const handleDecrement = (item) => { // sepetteki üründen -1 çıkarma fonksiyonu
     if (item.quantity > 1) {
       dispatch(decrementCartItemQuantity(item));
     }
   };
 
-  const handleSendOrder = () => {
+  const handleSendOrder = () => { //sipariş gönderme fonksiyonu
     const id = getUserId();
     setSending(true);
+    if (!selectedAddressId) {
+      alert("Lütfen bir adres seçin");
+      setSending(false);
+      return;
+    }
     if (cartItems.length === 0) {
       alert("Sepetinizde ürün yok");
       setSending(false);
@@ -67,10 +84,11 @@ const Cart = () => {
         .post(
           "/order",
           {
-            iscredit: true,
+            iscredit: handleCreditChange(selectedOption),
             userId: id,
-            adreAddressId: 1,
+            adreAddressId: selectedAddressId,
             cartItems: cartItems,
+            totalPrice: calculateTotalPrice(),
           },
           {
             mode: "cors",
@@ -83,7 +101,7 @@ const Cart = () => {
           }
         )
         .then((response) => {
-          dispatch(clearCart())
+          dispatch(clearCart());
           alert("Siparişiniz başarıyla gönderildi!");
         })
         .catch((error) => {
@@ -95,12 +113,89 @@ const Cart = () => {
     }
   };
 
-  const calculateTotalPrice = () => {
+  const calculateTotalPrice = () => { //toplam fiyat hesaplama fonksiyonu
     let total = 0;
     cartItems.forEach((item) => {
       total += item.price * item.quantity;
     });
     return total;
+  };
+
+
+  const handleInputChange = (event) => { //adres ekleme formundaki inputların değişimini takip eden fonksiyon
+    const { name, value } = event.target;
+    setAddressData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => { //adres ekleme formunun submit edilmesini takip eden fonksiyon
+    event.preventDefault();
+
+    // Assuming you will send the data to the backend here
+    try {
+      await axios
+        .post(
+          "/address",
+          {
+            name: addressData.name,
+            description: addressData.description,
+            province: addressData.city,
+            district: addressData.district,
+          },
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            dispatch(fetchUserAddress(getUserId()));
+            console.log("Address created:", addressData);
+          } else {
+            console.error("Failed to create address");
+          }
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleDeleteAddress = (addressId) => { //adres silme fonksiyonu
+    if (window.confirm("Are you sure you want to delete this address?")) {
+      axios
+        .delete("/address", {
+          data: { id: addressId },
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+        })
+        .then((response) => {
+          // Update the user's address list after successful deletion
+          dispatch(fetchUserAddress(getUserId()));
+        })
+        .catch((error) => {
+          console.error("Error deleting address:", error);
+        });
+    }
+  };
+
+  const handleOptionChange = (event) => { //ödeme şeklini takip eden fonksiyon
+    setSelectedOption(event.target.value);
+  };
+
+
+  const handleCreditChange = (selectedOption) => { //ödeme şeklini belirleyen fonksiyon
+    if (selectedOption === "creditCard") {
+      return true;
+    }
+    if (selectedOption === "cash") {
+      return false;
+    }
   };
 
   return (
@@ -125,7 +220,26 @@ const Cart = () => {
                   <hr />
                 </div>
               ))}
-              <p>Total Cart Price: {calculateTotalPrice()}₺</p>
+              <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
+              <h6>Ödeme Şekli:</h6>
+              <label>
+                <input
+                  type="radio"
+                  value="creditCard"
+                  checked={selectedOption === "creditCard"}
+                  onChange={handleOptionChange}
+                />
+                Kredi Kartı
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="cash"
+                  checked={selectedOption === "cash"}
+                  onChange={handleOptionChange}
+                />
+                Nakit
+              </label>
               <button onClick={handleSendOrder} disabled={sending}>
                 Send order
               </button>
@@ -135,12 +249,65 @@ const Cart = () => {
               {userAddress &&
                 userAddress.map((user) => (
                   <div key={user.addressId}>
-                    <p>Name: {user.name}</p>
-                    <p>id: {user.userId}</p>
-                    <p>id: {user.addressId}</p>
+                    <p>Adres İsmi : {user.name}</p>
+                    <p>Adres Açıklaması : {user.description}</p>
+                    <p>İl : {user.province}</p>
+                    <p>İlçe : {user.district}</p>
+                    <input
+                      type="radio"
+                      name="selectedAddress"
+                      value={user.addressId}
+                      onChange={handleAddressChange}
+                    />
+                    <button onClick={() => handleDeleteAddress(user.addressId)}>
+                      Delete Address
+                    </button>
                     {/* Display other address fields */}
                   </div>
                 ))}
+              <hr />
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label htmlFor="name">Address Name:</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={addressData.name}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="description">Address Description:</label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={addressData.description}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="city">City:</label>
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={addressData.city}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="district">District:</label>
+                  <input
+                    type="text"
+                    id="district"
+                    name="district"
+                    value={addressData.district}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <button type="submit">Create Address</button>
+              </form>
             </Col>
           </Row>
         </Container>

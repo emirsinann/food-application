@@ -6,7 +6,7 @@ import Header from '../components/Header'
 
 const Login = () => {
 
-    const { login } = useAuth();
+    const { login, setAuth } = useAuth();
     
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,22 +34,22 @@ const Login = () => {
             const response = await login(email, pwd);
             const accessToken = response?.acces_token;
             localStorage.setItem('accessToken', accessToken);
-            console.log(accessToken);
+            setAuth(email, pwd)
             setEmail('');
             setPwd('');
             navigate(from, { replace: true });
         } catch (err) {
             if (!err?.response) {
-                setErrMsg('No Server Response');
+                setErrMsg('Sunucuya Bağlanılamadı.');
             } else if (err.response?.status === 400) {
-                setErrMsg('Missing Username or Password');
+                setErrMsg('Kullanıcı adı veya parola yanlış.');
             } else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
+                setErrMsg('Kullanıcı adı veya parola yanlış.');
             }else if (err.response?.status === 404){
-                setErrMsg('User Not Found');
+                setErrMsg('Kullanıcı Bulunamadı.');
             } 
             else {
-                setErrMsg('Login Failed');
+                setErrMsg('Giriş Yapılamadı.');
             }
             errRef.current.focus();
         }
@@ -62,7 +62,7 @@ const Login = () => {
                 <section className='loginpage'>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">Email:</label>
+                        <label htmlFor="username">E-Posta:</label>
                         <input
                             type="text"
                             id="email"

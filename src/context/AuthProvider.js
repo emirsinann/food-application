@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, pwd) => {
     // Your login logic here
     const user = await authService.login(email, pwd);
-    console.log(user);
     setIsAuthenticated(true);
     return user;
   };
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ auth, setAuth, isAuthenticated, setIsAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

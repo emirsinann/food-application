@@ -6,10 +6,17 @@ import Header from "../components/Header";
 const OrdersPage = () => {
   const dispatch = useDispatch();
   const userOrders = useSelector((state) => state.orderReducer.orders);
-  console.log("User Orders:", userOrders);
   useEffect(() => {
     dispatch(fetchUserOrders());
   }, [dispatch]);
+
+  const paymentMethod = (iscredit) => {
+    if (iscredit) {
+      return "Kredi Kartı";
+    } else {
+      return "Nakit";
+    }
+  }
 
   return (
     <>
@@ -20,19 +27,29 @@ const OrdersPage = () => {
           userOrders.map((order) => {
             return (
               <div key={order.orderID}>
-                <p>Order ID: {order.orderID}</p>
-                <p>Kredi Karti?: {order.iscredit}</p>
-                <p>User: {order.userId}</p>
-                <p>adress: {order.adreAddressId}</p>
+                <p>Sipariş Numarası: {order.orderID}</p>
+                <p>Ödeme Yöntemi: {paymentMethod(order.iscredit)}</p>
+                {order.adre ? (
+                  <div>
+                    <p>Address İsmi: {order.adre.name}</p>
+                    <p>Adres Açıklaması: {order.adre.description}</p>
+                    <p>İl: {order.adre.province}</p>
+                    <p>İlçe: {order.adre.district}</p>
+                  </div>
+                ) : (
+                  <p>Adres Silindi.</p>
+                )}
                 {order.order_products.map((product) => {
                   return (
                     <div key={product.opID}>
-                      <p>{product.product.name}</p>
-                      <p>{product.product.price}</p>
-                      <p>{product.quantity}</p>
+                      <p>Ürün : {product.product.name}</p>
+                      <p>Fiyat : {product.product.price}</p>
+                      <p>Miktar : {product.quantity}</p>
                     </div>
-                  )
+                  );
                 })}
+                <p>{order.totalPrice}</p>
+                <hr />
               </div>
             );
           })}

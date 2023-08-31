@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./custom.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Product from "./pages/Product";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -15,21 +15,18 @@ import useAuth from "./hooks/useAuth";
 import checkTokenExpiration from "./actions/checkTokenExpiration";
 
 function App() {
-  const { logout } = useAuth();
+  const { logout, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  /* const checkTokenExpiration = () => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      const tokenData = jwt_decode(token); // Decode the token
-      const expirationTime = tokenData.exp * 1000; // Convert expiration timestamp to milliseconds
-
-      if (Date.now() >= expirationTime) {
-        return true; // Token has expired
-      }
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      setIsAuthenticated(true);
     }
-    return false; // Token is not expired
-  }; */
+    else {
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (checkTokenExpiration()) {

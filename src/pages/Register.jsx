@@ -82,7 +82,6 @@ const Register = () => {
     }
     try {
       const response = await AuthService.register(name, email, phone, pwd);
-      console.log(response);
       /* console.log(response); */
       //clear state and controlled inputs
       //need value attrib on inputs for this

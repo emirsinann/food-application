@@ -9,6 +9,7 @@ import { fetchProducts } from "../actions/productActions";
 import { addToCart } from "../actions/cartAction";
 import burger from "../assets/burger1.jpg";
 import addcart from "../assets/add-to-cart.png";
+/* import productImages from "../assets/product-images"; */
 
 
 export default function ProductList() {

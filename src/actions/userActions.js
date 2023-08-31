@@ -13,7 +13,6 @@ export const fetchUserAddress = () => (dispatch) => {
       },
     }) // Replace with your API endpoint
     .then((response) => {
-      console.log("Response:", response);
       const addressData = response.data; // Assuming the response contains address data
       dispatch({ type: FETCH_USER_ADDRESS_SUCCESS, payload: addressData });
     })

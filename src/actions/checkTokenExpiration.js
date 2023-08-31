@@ -14,8 +14,6 @@ export default function checkTokenExpiration() {
 
     const expirationTime = payloadObj.exp * 1000; // Convert to milliseconds
 
-    console.log(expirationTime);
-    console.log(Date.now());
 
     if (Date.now() > expirationTime) {
       return true; // Token has expired

@@ -11,7 +11,6 @@ export const fetchUserOrders = () => async (dispatch, getState) => {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
       },
     });
-    console.log(response.data);
     dispatch({ type: 'FETCH_USER_ORDERS_SUCCESS', payload: response.data });
   } catch (error) {
     console.error(error);
