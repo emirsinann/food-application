@@ -188,7 +188,6 @@ const Cart = () => {
     setSelectedOption(event.target.value);
   };
 
-
   const handleCreditChange = (selectedOption) => { //ödeme şeklini belirleyen fonksiyon
     if (selectedOption === "creditCard") {
       return true;
