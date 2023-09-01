@@ -7,9 +7,11 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../actions/productActions";
 import { addToCart } from "../actions/cartAction";
-import burger from "../assets/burger1.jpg";
 import addcart from "../assets/add-to-cart.png";
-/* import productImages from "../assets/product-images"; */
+
+
+const images = require.context('./product-images', true);
+const imageList = images.keys().map(image => images(image));
 
 
 export default function ProductList() {
@@ -78,10 +80,12 @@ export default function ProductList() {
       <div className="products">
         <Container fluid>
           <Row>
-            {data.map((item) => (
+            {data.map((item) =>{
+              const id = item.productID - 1;
+              return (
               <Col xs={12} sm={6} md={4} lg={3} xl={3} key={item.productID}>
                 <div className="product">
-                  <Image src={burger} className="product-image" />
+                  <Image src={imageList[id]} className="product-image" />
                   <div className="product-divider"></div>
                   <div className="bottom-section">
                     <div className="product-name">
@@ -96,7 +100,7 @@ export default function ProductList() {
                   </div>
                 </div>
               </Col>
-            ))}
+            )})}
           </Row>
         </Container>
       </div>

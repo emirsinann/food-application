@@ -151,7 +151,7 @@ const Register = () => {
             </p>
 
             <label htmlFor="email">
-              Email:
+              E-Posta:
               <FontAwesomeIcon
                 icon={faCheck}
                 className={validEmail ? "valid" : "hide"}

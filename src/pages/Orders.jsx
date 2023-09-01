@@ -47,7 +47,7 @@ const OrdersPage = () => {
             {userOrders &&
               userOrders.map((order) => {
                 return (
-                  <>
+                  <div key={order.orderID}>
                     <Row className="order-row" key={order.orderID}>
                       <Col>
                         <h6 className="order-id">
@@ -55,7 +55,10 @@ const OrdersPage = () => {
                         </h6>
                         <div className="divider"></div>
                         <p className="order-date">
-                          <strong>Sipariş Tarihi:</strong> 12.12.2020
+                          <strong>Sipariş Tarihi:</strong>{" "}
+                          {order.siparisTarihi.toString().slice(0, 10) +
+                            " " +
+                            order.siparisTarihi.toString().slice(11, 19)}
                         </p>
                       </Col>
                       <Col className="mid-column">
@@ -114,7 +117,10 @@ const OrdersPage = () => {
                         </Row>
                         {order.order_products.map((product) => {
                           return (
-                            <Row className="product-accordion" key={product.productProductID}>
+                            <Row
+                              className="product-accordion"
+                              key={product.productProductID}
+                            >
                               <Col>
                                 <p>{product.product.name}</p>
                               </Col>
@@ -135,45 +141,12 @@ const OrdersPage = () => {
                         })}
                       </div>
                     </Accordion.Collapse>
-                  </>
+                  </div>
                 );
               })}
           </Accordion>
         </Container>
       </div>
-      {/* <div className="orders">
-        <h1>Your Orders</h1>
-        {userOrders &&
-          userOrders.map((order) => {
-            return (
-              <div key={order.orderID}>
-                <p>Sipariş Numarası: {order.orderID}</p>
-                <p>Ödeme Yöntemi: {paymentMethod(order.iscredit)}</p>
-                {order.adre ? (
-                  <div>
-                    <p>Address İsmi: {order.adre.name}</p>
-                    <p>Adres Açıklaması: {order.adre.description}</p>
-                    <p>İl: {order.adre.province}</p>
-                    <p>İlçe: {order.adre.district}</p>
-                  </div>
-                ) : (
-                  <p>Adres Silindi.</p>
-                )}
-                {order.order_products.map((product) => {
-                  return (
-                    <div key={product.opID}>
-                      <p>Ürün : {product.product.name}</p>
-                      <p>Fiyat : {product.product.price}</p>
-                      <p>Miktar : {product.quantity}</p>
-                    </div>
-                  );
-                })}
-                <p>{order.totalPrice}</p>
-                <hr />
-              </div>
-            );
-          })}
-      </div> */}
     </>
   );
 };

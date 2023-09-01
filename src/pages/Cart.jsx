@@ -4,6 +4,10 @@ import axios from "../api/axios";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Image from "react-bootstrap/Image";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
@@ -12,15 +16,21 @@ import {
   clearCart,
 } from "../actions/cartAction";
 import { fetchUserAddress } from "../actions/userActions";
+import Home from "../assets/home.png";
+
+const images = require.context('../components/product-images', true);
+const imageList = images.keys().map(image => images(image));
 
 const Cart = () => {
   const dispatch = useDispatch();
   const storedUserJSON = localStorage.getItem("user"); //localstorage dan user bilgileri çekildi
   const userAddress = useSelector((state) => state.userReducer.address); //userAdress reduxtan çekildi
   const cartItems = useSelector((state) => state.cartReducer.cartItems);
+  const [orderNote, setOrderNote] = useState(""); // sipariş notu
   const [sending, setSending] = useState(false);
   const [selectedOption, setSelectedOption] = useState("creditCard");
   const [selectedAddressId, setSelectedAddressId] = useState(null); // seçilen adresin idsi
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressData, setAddressData] = useState({
     name: "",
     description: "",
@@ -28,18 +38,20 @@ const Cart = () => {
     district: "",
   });
 
-  useEffect(() => { // adresleri çekme fonksiyonu
-    dispatch(fetchUserAddress(getUserId)); 
+  useEffect(() => {
+    // adresleri çekme fonksiyonu
+    dispatch(fetchUserAddress(getUserId));
   }, []);
 
-
-  const handleAddressChange = (event) => {
-    setSelectedAddressId(event.target.value); // seçilen adresin idsi set edildi radio butonlarından alındı
+  const handleAddressChange = (item) => {
+    setSelectedAddressId(item.addressId); // seçilen adresin idsi set edildi radio butonlarından alındı
+    setSelectedAddress(item); // seçilen adres set edildi
   };
 
   // Retrieve stored user data from localStorage
 
-  const getUserId = () => { //user idsi çekildi
+  const getUserId = () => {
+    //user idsi çekildi
     if (storedUserJSON) {
       // Parse the stored user data
       const storedUser = JSON.parse(storedUserJSON);
@@ -52,22 +64,25 @@ const Cart = () => {
     }
   };
 
-
-  const handleDelete = (itemId) => {  //sepetten ürün silme fonksiyonu
+  const handleDelete = (itemId) => {
+    //sepetten ürün silme fonksiyonu
     dispatch(removeFromCart(itemId));
   };
 
-  const handleIncrement = (item) => { // sepetteki ürüne +1 ekleme fonksiyonu
+  const handleIncrement = (item) => {
+    // sepetteki ürüne +1 ekleme fonksiyonu
     dispatch(addToCart(item));
   };
 
-  const handleDecrement = (item) => { // sepetteki üründen -1 çıkarma fonksiyonu
+  const handleDecrement = (item) => {
+    // sepetteki üründen -1 çıkarma fonksiyonu
     if (item.quantity > 1) {
       dispatch(decrementCartItemQuantity(item));
     }
   };
 
-  const handleSendOrder = () => { //sipariş gönderme fonksiyonu
+  const handleSendOrder = () => {
+    //sipariş gönderme fonksiyonu
     const id = getUserId();
     setSending(true);
     if (!selectedAddressId) {
@@ -89,6 +104,7 @@ const Cart = () => {
             adreAddressId: selectedAddressId,
             cartItems: cartItems,
             totalPrice: calculateTotalPrice(),
+            orderNote: orderNote,
           },
           {
             mode: "cors",
@@ -113,7 +129,8 @@ const Cart = () => {
     }
   };
 
-  const calculateTotalPrice = () => { //toplam fiyat hesaplama fonksiyonu
+  const calculateTotalPrice = () => {
+    //toplam fiyat hesaplama fonksiyonu
     let total = 0;
     cartItems.forEach((item) => {
       total += item.price * item.quantity;
@@ -121,8 +138,8 @@ const Cart = () => {
     return total;
   };
 
-
-  const handleInputChange = (event) => { //adres ekleme formundaki inputların değişimini takip eden fonksiyon
+  const handleInputChange = (event) => {
+    //adres ekleme formundaki inputların değişimini takip eden fonksiyon
     const { name, value } = event.target;
     setAddressData((prevData) => ({
       ...prevData,
@@ -130,7 +147,8 @@ const Cart = () => {
     }));
   };
 
-  const handleSubmit = async (event) => { //adres ekleme formunun submit edilmesini takip eden fonksiyon
+  const handleSubmit = async (event) => {
+    //adres ekleme formunun submit edilmesini takip eden fonksiyon
     event.preventDefault();
 
     // Assuming you will send the data to the backend here
@@ -156,6 +174,7 @@ const Cart = () => {
           if (response.status === 201) {
             dispatch(fetchUserAddress(getUserId()));
             console.log("Address created:", addressData);
+            handleCloseModal();
           } else {
             console.error("Failed to create address");
           }
@@ -165,7 +184,8 @@ const Cart = () => {
     }
   };
 
-  const handleDeleteAddress = (addressId) => { //adres silme fonksiyonu
+  const handleDeleteAddress = (addressId) => {
+    //adres silme fonksiyonu
     if (window.confirm("Are you sure you want to delete this address?")) {
       axios
         .delete("/address", {
@@ -184,11 +204,13 @@ const Cart = () => {
     }
   };
 
-  const handleOptionChange = (event) => { //ödeme şeklini takip eden fonksiyon
+  const handleOptionChange = (event) => {
+    //ödeme şeklini takip eden fonksiyon
     setSelectedOption(event.target.value);
   };
 
-  const handleCreditChange = (selectedOption) => { //ödeme şeklini belirleyen fonksiyon
+  const handleCreditChange = (selectedOption) => {
+    //ödeme şeklini belirleyen fonksiyon
     if (selectedOption === "creditCard") {
       return true;
     }
@@ -197,11 +219,341 @@ const Cart = () => {
     }
   };
 
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
   return (
     <div>
       <Header />
-      <div className="cart">
-        <Container fluid>
+        <Container className="cart">
+          <Row md={6} xs={6} sm={6} className="">
+            <Col md={8} xs={12} sm={4} className="basket-col">
+              {cartItems == null ? (
+                cartItems.map((item) =>{
+                  const id = item.productID - 1;
+                  return(
+                    <>
+                    <Row key={item.productID}>
+                      <Image
+                        src={imageList[id]}
+                        key={item.productID}
+                        alt="burger"
+                        thumbnail
+                        style={{ width: "28%" }}
+                        fluid
+                      />
+                      <Col className="col-md-4 mx-auto">
+                        <div>
+                          <h3>
+                            {" "}
+                            <b>{item.name} </b>{" "}
+                          </h3>
+                          <div className="divider"></div>
+                          <p>{item.explanation}</p>
+                          <p>Fiyat: {item.price}₺</p>
+
+                          <br />
+                        </div>
+                      </Col>
+
+                      <Col md={2} xs={3} sm={4} className="inc-dec-img">
+                        <Row className="quantity-col">
+                          <Button onClick={() => handleDecrement(item)}>
+                            -
+                          </Button>
+                          {item.quantity}
+                          <Button onClick={() => handleIncrement(item)}>
+                            +
+                          </Button>{" "}
+                        </Row>
+                      </Col>
+
+                      <Col md={2} xs={3} sm={4} className="trash-img">
+                        <Button onClick={() => handleDelete(item.productID)}>
+                          Sil
+                        </Button>
+                      </Col>
+                    </Row>
+                  </>
+                  )
+                })):(
+                  <div>
+                    <h3>Sepetinizde Ürün Bulunmamaktadır.</h3>
+                  </div>
+                )}
+                
+              
+              <Row md={12} className="">
+                <div className="divider"></div>
+                <h2>Kayıtlı Adresler</h2>
+                {userAddress &&
+                  userAddress.map((item) => (
+                    <Col key={item.addressId}>
+                      <Container>
+                        <div
+                          className={`card mb-3-address ${
+                            selectedAddressId === item.addressId
+                              ? "selected"
+                              : ""
+                          } `}
+                          onClick={() => handleAddressChange(item)}
+                        >
+                          <div className="card">
+                            <Image
+                              className="card-address-card"
+                              src={Home}
+                              alt="Home"
+                              thumbnail
+                            />
+                          </div>
+                          <div className="divider"></div>
+                          <div className="card-body">
+                            <p className="card-text">{item.name}</p>
+                            <p className="card-text">{item.description}</p>
+                            <p className="card-text">
+                              {item.province} / {item.district}{" "}
+                            </p>
+                            <Button
+                              onClick={() =>
+                                handleDeleteAddress(item.addressId)
+                              }
+                            >
+                              Sil
+                            </Button>
+                          </div>
+                        </div>
+                      </Container>
+                    </Col>
+                  ))}
+                <Col>
+                  <Container>
+                    <div className="card mb-3-address">
+                      <div
+                        className="card-zero-address"
+                        onClick={handleShowModal}
+                      >
+                        <strong>+</strong>
+                        <p>
+                          <strong>Adres Ekle</strong>
+                        </p>
+                      </div>
+                    </div>
+                  </Container>
+                </Col>
+              </Row>
+              {/* Modal */}
+              <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header
+                  closeButton
+                  style={{ backgroundColor: "red", color: "white" }}
+                >
+                  <Modal.Title>Adres Ekle</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                      <Form.Label>Adres Başlığı</Form.Label>
+                      <Form.Control
+                        className="address-input"
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={addressData.name}
+                        onChange={handleInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group style={{ paddingTop: "5px", marginTop: "5px" }}>
+                      <Form.Label>Adres</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        className="address-input"
+                        id="description"
+                        name="description"
+                        value={addressData.description}
+                        onChange={handleInputChange}
+                      />
+                    </Form.Group>
+                    <Row>
+                      <Col>
+                        <Form.Group
+                          style={{ paddingTop: "5px", marginTop: "5px" }}
+                        >
+                          <Form.Label>İl</Form.Label>
+                          <Form.Control
+                            className="address-input"
+                            id="city"
+                            name="city"
+                            value={addressData.city}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col>
+                        <Form.Group
+                          style={{ paddingTop: "5px", marginTop: "5px" }}
+                        >
+                          <Form.Label>İlçe</Form.Label>
+                          <Form.Control
+                            className="address-input"
+                            type="text"
+                            id="district"
+                            name="district"
+                            value={addressData.district}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Button
+                      variant="danger"
+                      type="submit"
+                      style={{ paddingTop: "5px", marginTop: "5px" }}
+                    >
+                      Kaydet
+                    </Button>
+                  </Form>
+                </Modal.Body>
+              </Modal>
+              {/* Modal */}
+              {/* <Modal show={showModal} onHide={handleCloseModal}>
+                        <Modal.Header closeButton style={{ backgroundColor: 'red', color: 'white' }}>
+                            <Modal.Title>Adres Ekle</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form onSubmit={handleFormSubmit}>
+                                <Form.Group controlId="addressTitle" >
+                                    <Form.Label>Adres Başlığı</Form.Label>
+                                    <Form.Control className='address-input' type="text" placeholder="Adres Başlığı" />
+                                </Form.Group>
+                                <Form.Group controlId="address" style={{ paddingTop: '5px', marginTop: '5px' }} >
+                                    <Form.Label>Adres</Form.Label>
+                                    <Form.Control className='address-input' type="text" placeholder="Adres" />
+                                </Form.Group>
+                                <Row>
+                                    <Col>
+                                        <Form.Group controlId="city" style={{ paddingTop: '5px', marginTop: '5px' }}>
+                                            <Form.Label>İl</Form.Label>
+                                            <Form.Control className='address-input' type="text" placeholder="İl" />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="district" style={{ paddingTop: '5px', marginTop: '5px' }}>
+                                            <Form.Label>İlçe</Form.Label>
+                                            <Form.Control className='address-input' type="text" placeholder="İlçe" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Button variant="danger" type="submit" style={{ paddingTop: '5px', marginTop: '5px' }}>
+                                    Adresi Kaydet
+                                </Button>
+                            </Form>
+                        </Modal.Body>
+                    </Modal> */}
+              <div className="divider"></div>
+              <Row>
+                <Col className="col-md-4">
+                  <div className="card border mb-3">
+                    <div className="card-odeme-card">
+                      <h5 className="card-title">Ödeme yöntemi</h5>
+                    </div>
+                    <div className="divider"></div>
+                    <div className="card-body-odeme">
+                      <div className="form-check">
+                        <h6>Ödeme Şekli:</h6>
+                        <label htmlFor="creditCard" className="radio-input">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            value="creditCard"
+                            checked={selectedOption === "creditCard"}
+                            onChange={handleOptionChange}
+                          />
+                          Kredi Kartı
+                        </label>
+                        <label htmlFor="cash" className="radio-input">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            value="cash"
+                            checked={selectedOption === "cash"}
+                            onChange={handleOptionChange}
+                          />
+                          Nakit
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </Col>
+                <Col className="col-md-8-input-col">
+                <Form.Control as="textarea" value={orderNote} onChange={(e)=>setOrderNote(e.target.value)} />
+                </Col>
+              </Row>
+            </Col>
+            <Col md={4} xs={12} className="siparis-col">
+              <div className="container-md-siparis">
+                <h5>
+                  {" "}
+                  <b> Sipariş Özeti</b>
+                </h5>
+                <div className="divider"></div>
+                <Row>
+                  <Col>
+                    <h5>
+                      {" "}
+                      <b> Seçilen Adres </b>
+                    </h5>
+                    {selectedAddressId !== null ? ( //Seçilen adres varsa
+                      <div className="selected-address">
+                        <p>{selectedAddress.name}</p>
+                        <p>{selectedAddress.description}</p>
+                        <p>
+                          {selectedAddress.province} /{" "}
+                          {selectedAddress.district}
+                        </p>
+                        <p></p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>Bir adres seçilmedi.</p>
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col></Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <h5>
+                      <b> Toplam Tutar</b>
+                    </h5>
+                    <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <button type="button" className="btn btn-warning">
+                      Alışverişe Dön{" "}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      style={{ marginLeft: "6px" }}
+                      onClick={handleSendOrder}
+                    >
+                      Sepeti Onayla{" "}
+                    </button>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+          <br />
+        </Container>
+
+      {/* <div className="cart">
+      <Container fluid>
           <Row>
             <Col>
               <h2>Sepetim</h2>
@@ -261,11 +613,9 @@ const Cart = () => {
                     <button onClick={() => handleDeleteAddress(user.addressId)}>
                       Delete Address
                     </button>
-                    {/* Display other address fields */}
-                  </div>
-                ))}
-              <hr />
-              <form onSubmit={handleSubmit}>
+                  </div> */}
+      {/* <hr />
+              < onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="name">Address Name:</label>
                   <input
@@ -310,7 +660,7 @@ const Cart = () => {
             </Col>
           </Row>
         </Container>
-      </div>
+      </div> */}
     </div>
   );
 };
