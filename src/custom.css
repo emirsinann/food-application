@@ -12417,6 +12417,7 @@ button {
 /* CART SECTION START */
 .cart {
   padding-top: 100px;
+  max-width: none;
 }
 
 /* CART SECTION END */
@@ -12595,30 +12596,10 @@ button {
   }
 }
 /* ORDER SECTION END */
-.basket-col {
-  height: 100vh;
-}
-
 .siparis-col {
+  display: flex;
   overflow-y: auto;
   max-height: 700px;
-}
-
-hr {
-  color: #ff0000;
-  border-top: 4px solid;
-  border-radius: 10px;
-}
-
-.inc-dec-img {
-  align-items: center;
-  justify-content: center;
-  width: 17%;
-  height: 17%;
-  margin: auto;
-  padding: auto;
-  border-radius: none;
-  border-color: aqua;
 }
 
 .trash-img {
@@ -12630,22 +12611,20 @@ hr {
 }
 
 .card-address-card {
-  width: 60%;
-  height: 60%;
+  width: 50px;
   align-items: center;
   justify-content: center;
   text-align: center;
+  border: none;
 }
 
 .card-zero-address {
-  width: 20%;
-  height: 20%;
-  border: 2px solid var(--customwhite);
-  border-radius: 5px;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
+  border: 2px solid #f5f4f4;
+  border-radius: 5px;
 }
 
 .card-zero-address:hover {
@@ -12657,6 +12636,7 @@ hr {
   margin: 0;
   align-items: center;
   justify-content: center;
+  border: none;
 }
 
 .card-odeme-card {
@@ -12666,6 +12646,7 @@ hr {
   padding-bottom: 0%;
   margin-bottom: 0%;
   height: 100%;
+  border: none;
 }
 
 .card-body {
@@ -12673,6 +12654,7 @@ hr {
   margin: 0;
   align-items: center;
   justify-content: center;
+  border: none;
 }
 
 .col-md-4-siparis-ozet {
@@ -12689,8 +12671,28 @@ hr {
   max-height: 900px;
 }
 
+.card {
+  border: none;
+}
+
 .card.selected {
   border: 2px solid #ff2400;
+}
+
+.address-card {
+  align-items: center;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
 }
 
 .card-body-adres-ekle {
@@ -12701,10 +12703,17 @@ hr {
 
 .add-address-button {
   margin-left: 5px;
+  border: none;
 }
 
 .btn-btn-warning {
   margin-left: 5px;
+}
+
+.address-card {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 2px solid var(--customwhite);
 }
 
 .address-input {
@@ -12713,11 +12722,14 @@ hr {
 }
 
 .form-check {
+  display: flex;
   padding-left: 5px;
+  text-align: center;
+  justify-content: space-evenly;
 }
 
 .form-check-input[type=radio] {
-  margin: 0;
+  margin: 0 5px 0 0;
   padding: 0;
 }
 
@@ -12728,9 +12740,79 @@ hr {
 .radio-input {
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
 }
 
-.quantity-row {
+.inc-dec-img {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.inc-dec-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 0 0 50%;
+  padding: 0 0 5px 0;
+  font-size: 35px;
+  line-height: 0px;
+  border: none;
+  background-color: var(--customyellow);
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+}
+
+.inc-dec-button2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 0 50% 50% 0;
+  padding: 0 0 5px 0;
+  font-size: 30px;
+  line-height: 0px;
+  border: none;
+  background-color: var(--customyellow);
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+}
+
+button {
+  margin: 0;
+}
+
+.quantity-item {
+  padding: 1px 10px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid var(--customyellow);
+  border-top: 2px solid var(--customyellow);
+}
+
+.delete-item {
+  border-radius: 50%;
+}
+
+.delete-address {
+  margin: 5px 0;
+  font-size: 12px;
+}
+
+.card-title {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+@media only screen and (max-width: 991px) {
+  .siparis-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .siparis {
+    flex-direction: row;
+  }
 }

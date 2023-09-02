@@ -18,8 +18,8 @@ import {
 import { fetchUserAddress } from "../actions/userActions";
 import Home from "../assets/home.png";
 
-const images = require.context('../components/product-images', true);
-const imageList = images.keys().map(image => images(image));
+const images = require.context("../components/product-images", true);
+const imageList = images.keys().map((image) => images(image));
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -226,20 +226,19 @@ const Cart = () => {
   return (
     <div>
       <Header />
-        <Container className="cart">
-          <Row md={6} xs={6} sm={6} className="">
-            <Col md={8} xs={12} sm={4} className="basket-col">
-              {cartItems == null ? (
-                cartItems.map((item) =>{
-                  const id = item.productID - 1;
-                  return(
-                    <>
+      <Container className="cart">
+        <Row>
+          <Col md={12} lg={8} className="basket-col">
+            {cartItems ? (
+              cartItems.map((item) => {
+                const id = item.productID - 1;
+                return (
+                  <>
                     <Row key={item.productID}>
                       <Image
                         src={imageList[id]}
-                        key={item.productID}
+                        key={imageList[id]}
                         alt="burger"
-                        thumbnail
                         style={{ width: "28%" }}
                         fluid
                       />
@@ -258,165 +257,163 @@ const Cart = () => {
                       </Col>
 
                       <Col md={2} xs={3} sm={4} className="inc-dec-img">
-                        <Row className="quantity-col">
-                          <Button onClick={() => handleDecrement(item)}>
-                            -
-                          </Button>
+                        <Button
+                          className="inc-dec-button"
+                          onClick={() => handleDecrement(item)}
+                        >
+                          -
+                        </Button>
+                        <strong className="quantity-item">
                           {item.quantity}
-                          <Button onClick={() => handleIncrement(item)}>
-                            +
-                          </Button>{" "}
-                        </Row>
+                        </strong>
+                        <Button
+                          className="inc-dec-button2"
+                          onClick={() => handleIncrement(item)}
+                        >
+                          +
+                        </Button>{" "}
                       </Col>
 
                       <Col md={2} xs={3} sm={4} className="trash-img">
-                        <Button onClick={() => handleDelete(item.productID)}>
+                        <Button
+                          className="delete-item"
+                          onClick={() => handleDelete(item.productID)}
+                        >
                           Sil
                         </Button>
                       </Col>
                     </Row>
                   </>
-                  )
-                })):(
-                  <div>
-                    <h3>Sepetinizde Ürün Bulunmamaktadır.</h3>
-                  </div>
-                )}
-                
-              
-              <Row md={12} className="">
-                <div className="divider"></div>
-                <h2>Kayıtlı Adresler</h2>
-                {userAddress &&
-                  userAddress.map((item) => (
-                    <Col key={item.addressId}>
-                      <Container>
-                        <div
-                          className={`card mb-3-address ${
-                            selectedAddressId === item.addressId
-                              ? "selected"
-                              : ""
-                          } `}
-                          onClick={() => handleAddressChange(item)}
-                        >
-                          <div className="card">
-                            <Image
-                              className="card-address-card"
-                              src={Home}
-                              alt="Home"
-                              thumbnail
-                            />
-                          </div>
-                          <div className="divider"></div>
-                          <div className="card-body">
-                            <p className="card-text">{item.name}</p>
-                            <p className="card-text">{item.description}</p>
-                            <p className="card-text">
-                              {item.province} / {item.district}{" "}
-                            </p>
-                            <Button
-                              onClick={() =>
-                                handleDeleteAddress(item.addressId)
-                              }
-                            >
-                              Sil
-                            </Button>
-                          </div>
-                        </div>
-                      </Container>
-                    </Col>
-                  ))}
-                <Col>
-                  <Container>
-                    <div className="card mb-3-address">
+                );
+              })
+            ) : (
+              <div>
+                <h3>Sepetinizde Ürün Bulunmamaktadır.</h3>
+              </div>
+            )}
+
+            <Row md={12} className="">
+              <div className="divider"></div>
+              <h2>Kayıtlı Adresler</h2>
+              {userAddress &&
+                userAddress.map((item) => (
+                  <Col sm={6} md={4} lg={3} key={item.addressId}>
                       <div
-                        className="card-zero-address"
-                        onClick={handleShowModal}
+                        className={`card mb-3-address address-card ${
+                          selectedAddressId === item.addressId ? "selected" : ""
+                        } `}
+                        onClick={() => handleAddressChange(item)}
                       >
-                        <strong>+</strong>
-                        <p>
-                          <strong>Adres Ekle</strong>
-                        </p>
+                        <div className="card">
+                          <Image
+                            className="card-address-card"
+                            src={Home}
+                            alt="Home"
+                          />
+                        </div>
+                        <div className="divider"></div>
+                        <div className="card-body">
+                          <p className="card-text">{item.name}</p>
+                          <p className="card-text">{item.description}</p>
+                          <p className="card-text">
+                            {item.province} / {item.district}{" "}
+                          </p>
+                          <Button
+                            className="delete-address"
+                            onClick={() => handleDeleteAddress(item.addressId)}
+                          >
+                            Sil
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </Container>
-                </Col>
-              </Row>
-              {/* Modal */}
-              <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header
-                  closeButton
-                  style={{ backgroundColor: "red", color: "white" }}
-                >
-                  <Modal.Title>Adres Ekle</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group>
-                      <Form.Label>Adres Başlığı</Form.Label>
-                      <Form.Control
-                        className="address-input"
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={addressData.name}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Group>
-                    <Form.Group style={{ paddingTop: "5px", marginTop: "5px" }}>
-                      <Form.Label>Adres</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        className="address-input"
-                        id="description"
-                        name="description"
-                        value={addressData.description}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Group>
-                    <Row>
-                      <Col>
-                        <Form.Group
-                          style={{ paddingTop: "5px", marginTop: "5px" }}
-                        >
-                          <Form.Label>İl</Form.Label>
-                          <Form.Control
-                            className="address-input"
-                            id="city"
-                            name="city"
-                            value={addressData.city}
-                            onChange={handleInputChange}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col>
-                        <Form.Group
-                          style={{ paddingTop: "5px", marginTop: "5px" }}
-                        >
-                          <Form.Label>İlçe</Form.Label>
-                          <Form.Control
-                            className="address-input"
-                            type="text"
-                            id="district"
-                            name="district"
-                            value={addressData.district}
-                            onChange={handleInputChange}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <Button
-                      variant="danger"
-                      type="submit"
-                      style={{ paddingTop: "5px", marginTop: "5px" }}
-                    >
-                      Kaydet
-                    </Button>
-                  </Form>
-                </Modal.Body>
-              </Modal>
-              {/* Modal */}
-              {/* <Modal show={showModal} onHide={handleCloseModal}>
+                  </Col>
+                ))}
+              <Col sm={6} md={4} lg={3}>
+                <div className="card mb-3-address">
+                  <div className="card-zero-address" onClick={handleShowModal}>
+                    <strong>+</strong>
+                    <p>
+                      <strong>Adres Ekle</strong>
+                    </p>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            {/* Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+              <Modal.Header
+                closeButton
+                style={{ backgroundColor: "red", color: "white" }}
+              >
+                <Modal.Title>Adres Ekle</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group>
+                    <Form.Label>Adres Başlığı</Form.Label>
+                    <Form.Control
+                      className="address-input"
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={addressData.name}
+                      onChange={handleInputChange}
+                    />
+                  </Form.Group>
+                  <Form.Group style={{ paddingTop: "5px", marginTop: "5px" }}>
+                    <Form.Label>Adres</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      className="address-input"
+                      id="description"
+                      name="description"
+                      value={addressData.description}
+                      onChange={handleInputChange}
+                    />
+                  </Form.Group>
+                  <Row>
+                    <Col>
+                      <Form.Group
+                        style={{ paddingTop: "5px", marginTop: "5px" }}
+                      >
+                        <Form.Label>İl</Form.Label>
+                        <Form.Control
+                          className="address-input"
+                          id="city"
+                          name="city"
+                          value={addressData.city}
+                          onChange={handleInputChange}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group
+                        style={{ paddingTop: "5px", marginTop: "5px" }}
+                      >
+                        <Form.Label>İlçe</Form.Label>
+                        <Form.Control
+                          className="address-input"
+                          type="text"
+                          id="district"
+                          name="district"
+                          value={addressData.district}
+                          onChange={handleInputChange}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Button
+                    variant="danger"
+                    type="submit"
+                    style={{ paddingTop: "5px", marginTop: "5px" }}
+                  >
+                    Kaydet
+                  </Button>
+                </Form>
+              </Modal.Body>
+            </Modal>
+            {/* Modal */}
+            {/* <Modal show={showModal} onHide={handleCloseModal}>
                         <Modal.Header closeButton style={{ backgroundColor: 'red', color: 'white' }}>
                             <Modal.Title>Adres Ekle</Modal.Title>
                         </Modal.Header>
@@ -450,107 +447,107 @@ const Cart = () => {
                             </Form>
                         </Modal.Body>
                     </Modal> */}
-              <div className="divider"></div>
-              <Row>
-                <Col className="col-md-4">
-                  <div className="card border mb-3">
-                    <div className="card-odeme-card">
-                      <h5 className="card-title">Ödeme yöntemi</h5>
-                    </div>
-                    <div className="divider"></div>
-                    <div className="card-body-odeme">
-                      <div className="form-check">
-                        <h6>Ödeme Şekli:</h6>
-                        <label htmlFor="creditCard" className="radio-input">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            value="creditCard"
-                            checked={selectedOption === "creditCard"}
-                            onChange={handleOptionChange}
-                          />
-                          Kredi Kartı
-                        </label>
-                        <label htmlFor="cash" className="radio-input">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            value="cash"
-                            checked={selectedOption === "cash"}
-                            onChange={handleOptionChange}
-                          />
-                          Nakit
-                        </label>
-                      </div>
+            <div className="divider"></div>
+            <Row>
+              <Col className="col-md-4">
+                <div className="card border mb-3">
+                  <div className="card-odeme-card">
+                    <h5 className="card-title">Ödeme yöntemi</h5>
+                  </div>
+                  <div className="divider"></div>
+                  <div className="card-body-odeme">
+                    <div className="form-check">
+                      <label htmlFor="creditCard" className="radio-input">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          value="creditCard"
+                          checked={selectedOption === "creditCard"}
+                          onChange={handleOptionChange}
+                        />
+                        Kredi Kartı
+                      </label>
+                      <label htmlFor="cash" className="radio-input">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          value="cash"
+                          checked={selectedOption === "cash"}
+                          onChange={handleOptionChange}
+                        />
+                        Nakit
+                      </label>
                     </div>
                   </div>
-                </Col>
-                <Col className="col-md-8-input-col">
-                <Form.Control as="textarea" value={orderNote} onChange={(e)=>setOrderNote(e.target.value)} />
+                </div>
+              </Col>
+              <Col className="col-md-8-input-col">
+                <Form.Control
+                  as="textarea"
+                  value={orderNote}
+                  placeholder="Sipariş notu ekleyin."
+                  onChange={(e) => setOrderNote(e.target.value)}
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col md={12} lg={4} className="siparis-col">
+            <div className="container-md-siparis">
+              <h5>
+                {" "}
+                <b> Sipariş Özeti</b>
+              </h5>
+              <div className="divider"></div>
+              <Row className="siparis" md={12}>
+                <Col md={12}>
+                  <h5>
+                    {" "}
+                    <b> Seçilen Adres </b>
+                  </h5>
+                  {selectedAddressId !== null ? ( //Seçilen adres varsa
+                    <div className="selected-address">
+                      <p>{selectedAddress.name}</p>
+                      <p>{selectedAddress.description}</p>
+                      <p>
+                        {selectedAddress.province} / {selectedAddress.district}
+                      </p>
+                      <p></p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>Bir adres seçilmedi.</p>
+                    </div>
+                  )}
                 </Col>
               </Row>
-            </Col>
-            <Col md={4} xs={12} className="siparis-col">
-              <div className="container-md-siparis">
-                <h5>
-                  {" "}
-                  <b> Sipariş Özeti</b>
-                </h5>
-                <div className="divider"></div>
-                <Row>
-                  <Col>
-                    <h5>
-                      {" "}
-                      <b> Seçilen Adres </b>
-                    </h5>
-                    {selectedAddressId !== null ? ( //Seçilen adres varsa
-                      <div className="selected-address">
-                        <p>{selectedAddress.name}</p>
-                        <p>{selectedAddress.description}</p>
-                        <p>
-                          {selectedAddress.province} /{" "}
-                          {selectedAddress.district}
-                        </p>
-                        <p></p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p>Bir adres seçilmedi.</p>
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col></Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <h5>
-                      <b> Toplam Tutar</b>
-                    </h5>
-                    <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <button type="button" className="btn btn-warning">
-                      Alışverişe Dön{" "}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-warning"
-                      style={{ marginLeft: "6px" }}
-                      onClick={handleSendOrder}
-                    >
-                      Sepeti Onayla{" "}
-                    </button>
-                  </Col>
-                </Row>
-              </div>
-            </Col>
-          </Row>
-          <br />
-        </Container>
+              <Row md={12}>
+                <Col md={12}>
+                  <h5>
+                    <b> Toplam Tutar</b>
+                  </h5>
+                  <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
+                </Col>
+              </Row>
+              <Row md={12}>
+                <Col>
+                  <button type="button" className="btn btn-warning">
+                    Alışverişe Dön{" "}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-warning"
+                    style={{ marginLeft: "6px" }}
+                    onClick={handleSendOrder}
+                  >
+                    Sepeti Onayla{" "}
+                  </button>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+        <br />
+      </Container>
 
       {/* <div className="cart">
       <Container fluid>
