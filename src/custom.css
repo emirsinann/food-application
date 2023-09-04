@@ -12603,11 +12603,12 @@ button {
 }
 
 .trash-img {
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 8%;
-  margin: auto;
-  padding: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .card-address-card {
@@ -12748,6 +12749,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease-in-out;
 }
 
 .inc-dec-button {
@@ -12806,13 +12808,77 @@ button {
   text-align: center;
 }
 
+.cart-button {
+  margin: 5px 0 5px 0;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: row;
+  align-items: space-evenly;
+  justify-content: space-evenly;
+}
+
+.handle-button {
+  display: flex;
+  flex-direction: row;
+  align-items: space-evenly;
+  justify-content: space-evenly;
+}
+
 @media only screen and (max-width: 991px) {
   .siparis-col {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
   }
   .siparis {
+    margin-top: 45px;
     flex-direction: row;
+  }
+  .container-md-siparis {
+    display: flex;
+    flex-direction: row;
+  }
+  .container-md-siparis h5, .container-md-siparis .h5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .container-md-siparis .divider {
+    width: 130px;
+    justify-self: flex-start;
+    margin: 5px 0;
+  }
+  .container-md-siparis .handle-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .container-md-siparis .handle-button .cart-button {
+    margin: 5px 0 5px 0;
+  }
+  .delete-item {
+    margin: 0;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .cart-image {
+    display: none;
+  }
+}
+@media only screen and (max-width: 405px) {
+  .inc-dec-img {
+    flex-direction: column-reverse;
+    padding: 0;
+  }
+  .inc-dec-button {
+    border-radius: 0 0 50% 50%;
+  }
+  .inc-dec-button2 {
+    border-radius: 50% 50% 0 0;
   }
 }

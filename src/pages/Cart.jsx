@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import axios from "../api/axios";
 import Container from "react-bootstrap/Container";
@@ -38,6 +39,7 @@ const Cart = () => {
     district: "",
   });
 
+  const navigate = useNavigate();
   useEffect(() => {
     // adresleri çekme fonksiyonu
     dispatch(fetchUserAddress(getUserId));
@@ -233,16 +235,17 @@ const Cart = () => {
               cartItems.map((item) => {
                 const id = item.productID - 1;
                 return (
-                  <>
-                    <Row key={item.productID}>
+                  <div key={item.productID}>
+                    <Row className="item-info">
                       <Image
+                        className="cart-image"
                         src={imageList[id]}
                         key={imageList[id]}
                         alt="burger"
                         style={{ width: "28%" }}
                         fluid
                       />
-                      <Col className="col-md-4 mx-auto">
+                      <Col xs={6} sm={8} md={4}>
                         <div>
                           <h3>
                             {" "}
@@ -256,7 +259,7 @@ const Cart = () => {
                         </div>
                       </Col>
 
-                      <Col md={2} xs={3} sm={4} className="inc-dec-img">
+                      <Col xs={3} sm={2} md={2} className="inc-dec-img">
                         <Button
                           className="inc-dec-button"
                           onClick={() => handleDecrement(item)}
@@ -274,7 +277,7 @@ const Cart = () => {
                         </Button>{" "}
                       </Col>
 
-                      <Col md={2} xs={3} sm={4} className="trash-img">
+                      <Col xs={3} sm={2} md={2} className="trash-img">
                         <Button
                           className="delete-item"
                           onClick={() => handleDelete(item.productID)}
@@ -283,7 +286,7 @@ const Cart = () => {
                         </Button>
                       </Col>
                     </Row>
-                  </>
+                  </div>
                 );
               })
             ) : (
@@ -313,10 +316,10 @@ const Cart = () => {
                         </div>
                         <div className="divider"></div>
                         <div className="card-body">
-                          <p className="card-text">{item.name}</p>
+                          <p className="card-text"><strong>{item.name}</strong></p>
                           <p className="card-text">{item.description}</p>
                           <p className="card-text">
-                            {item.province} / {item.district}{" "}
+                            <strong>{item.province} / {item.district}{" "}</strong>
                           </p>
                           <Button
                             className="delete-address"
@@ -493,13 +496,11 @@ const Cart = () => {
           </Col>
           <Col md={12} lg={4} className="siparis-col">
             <div className="container-md-siparis">
+              <Row>
               <h5>
-                {" "}
                 <b> Sipariş Özeti</b>
-              </h5>
               <div className="divider"></div>
-              <Row className="siparis" md={12}>
-                <Col md={12}>
+              </h5>
                   <h5>
                     {" "}
                     <b> Seçilen Adres </b>
@@ -518,28 +519,24 @@ const Cart = () => {
                       <p>Bir adres seçilmedi.</p>
                     </div>
                   )}
-                </Col>
               </Row>
-              <Row md={12}>
-                <Col md={12}>
+              <Row className="siparis" md={12}>
+                <Col md={12} className="handle-button">
                   <h5>
                     <b> Toplam Tutar</b>
                   </h5>
                   <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
                 </Col>
-              </Row>
-              <Row md={12}>
-                <Col>
-                  <button type="button" className="btn btn-warning">
-                    Alışverişe Dön{" "}
+                <Col className="handle-button" md={12}>
+                  <button type="button" className="btn btn-warning cart-button" onClick={()=>navigate('/')}>
+                    <strong>Alışverişe Dön</strong>
                   </button>
                   <button
                     type="button"
-                    className="btn btn-warning"
-                    style={{ marginLeft: "6px" }}
+                    className="btn btn-warning cart-button"
                     onClick={handleSendOrder}
                   >
-                    Sepeti Onayla{" "}
+                    <strong>Sepeti Onayla</strong>
                   </button>
                 </Col>
               </Row>
