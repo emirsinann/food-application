@@ -13,7 +13,6 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import useAuth from "./hooks/useAuth";
 import checkTokenExpiration from "./actions/checkTokenExpiration";
-import Notification from "./components/Notification";
 
 function App() {
   const { logout, setIsAuthenticated } = useAuth();
@@ -37,8 +36,6 @@ function App() {
   }, [ logout, navigate ]);
 
   return (
-    <>
-    <Notification />
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Product />} />
@@ -53,7 +50,6 @@ function App() {
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>
-    </>
   );
 }
 

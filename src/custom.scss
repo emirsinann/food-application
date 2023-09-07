@@ -472,6 +472,10 @@ button {
 .order-container {
   width: 600px;
 }
+.accordion-wrapper{
+  display: flex;
+  flex-direction: column-reverse;
+}
 
 .divider {
   width: 100%;
@@ -594,7 +598,7 @@ button {
   transition: all 0.4s ease-in-out;
 }
 
-.details-button:active, .details-button:focus, .details-button:hover{
+.details-button:hover{
   background-color: var(--customred);
 }
 

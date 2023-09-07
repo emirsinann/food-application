@@ -28,7 +28,6 @@ const Cart = () => {
   const userAddress = useSelector((state) => state.userReducer.address); //userAdress reduxtan çekildi
   const cartItems = useSelector((state) => state.cartReducer.cartItems);
   const [orderNote, setOrderNote] = useState(""); // sipariş notu
-  const [sending, setSending] = useState(false);
   const [selectedOption, setSelectedOption] = useState("creditCard");
   const [selectedAddressId, setSelectedAddressId] = useState(null); // seçilen adresin idsi
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -86,15 +85,12 @@ const Cart = () => {
   const handleSendOrder = () => {
     //sipariş gönderme fonksiyonu
     const id = getUserId();
-    setSending(true);
     if (!selectedAddressId) {
       alert("Lütfen bir adres seçin");
-      setSending(false);
       return;
     }
     if (cartItems.length === 0) {
       alert("Sepetinizde ürün yok");
-      setSending(false);
       return;
     } else {
       axios
@@ -126,7 +122,6 @@ const Cart = () => {
           console.error(error);
         })
         .finally(() => {
-          setSending(false);
         });
     }
   };
