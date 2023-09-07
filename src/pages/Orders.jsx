@@ -139,6 +139,11 @@ const OrdersPage = () => {
                             </Row>
                           );
                         })}
+                        <Row className="product-accordion">
+                          <Col>
+                            <p>Sipariş Notu : {order.orderNote}</p>
+                          </Col>
+                        </Row>
                       </div>
                     </Accordion.Collapse>
                   </div>

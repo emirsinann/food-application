@@ -19,7 +19,6 @@ const cartReducer = (state = initialState, action) => {
       const existingItem = state.cartItems.find(
         (item) => item.productID === action.payload.productID
       );
-
       if (existingItem) {
         // Item already exists, update quantity
         return {

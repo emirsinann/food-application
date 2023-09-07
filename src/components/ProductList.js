@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../actions/productActions";
 import { addToCart } from "../actions/cartAction";
 import addcart from "../assets/add-to-cart.png";
+import { notify } from "./Notification";
 
 
 const images = require.context('./product-images', true);
@@ -35,6 +36,11 @@ export default function ProductList() {
       return item.categoryCategoryID === catItem;
     });
     setData(result);
+  };
+
+  const handleAddToCart = (item) => {
+    notify("Ürün sepete eklendi");
+    dispatch(addToCart(item));
   };
 
   useEffect(() => {
@@ -92,7 +98,7 @@ export default function ProductList() {
                       <h5>{item.name}</h5>
                     </div>
                     <div className="add-cart">
-                      <Image src={addcart} onClick={()=>dispatch(addToCart(item))}/>
+                      <Image src={addcart} onClick={()=>handleAddToCart(item)}/>
                     </div>
                   </div>
                   <div className="product-price">

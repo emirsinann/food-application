@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./custom.css";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import Product from "./pages/Product";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -13,6 +13,7 @@ import { Routes, Route } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import useAuth from "./hooks/useAuth";
 import checkTokenExpiration from "./actions/checkTokenExpiration";
+import Notification from "./components/Notification";
 
 function App() {
   const { logout, setIsAuthenticated } = useAuth();
@@ -31,11 +32,13 @@ function App() {
   useEffect(() => {
     if (checkTokenExpiration()) {
       logout();
-      navigate('/login'); // Redirect to login if token expired
+      navigate('/');
     }
   }, [ logout, navigate ]);
 
   return (
+    <>
+    <Notification />
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Product />} />
@@ -50,6 +53,7 @@ function App() {
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>
+    </>
   );
 }
 

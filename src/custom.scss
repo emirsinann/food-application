@@ -291,6 +291,9 @@ $list-group-action-active-bg: var(--customred);
   margin-top: 50px;
   text-align: center;
 }
+.footer-links{
+  text-decoration: none;
+}
 
 @media only screen and (max-width: 272px) {
   .left-col {

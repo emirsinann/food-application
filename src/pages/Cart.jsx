@@ -521,11 +521,11 @@ const Cart = () => {
                   )}
               </Row>
               <Row className="siparis" md={12}>
-                <Col md={12} className="handle-button">
+                <Col md={12} className="total-price">
                   <h5>
                     <b> Toplam Tutar</b>
                   </h5>
-                  <p>Sepet Tutarı: {calculateTotalPrice()}₺</p>
+                  <p>{calculateTotalPrice()}₺</p>
                 </Col>
                 <Col className="handle-button" md={12}>
                   <button type="button" className="btn btn-warning cart-button" onClick={()=>navigate('/')}>
